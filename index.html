@@ -1,61 +1,62 @@
 <div style="text-align:center;">
 
   <!-- OPEN PACK BUTTON -->
-  <button onclick="openPack()" style="margin-bottom:25px;padding:10px 20px;font-size:16px;cursor:pointer;">Open Pack</button>
+  <button onclick="openPack()" style="margin-bottom:25px;padding:10px 20px;font-size:16px;cursor:pointer;">
+    Open Pack
+  </button>
 
-  <!-- SPOTLIGHT -->
-  <div id="spotlight" style="width:250px;height:350px;background:black;margin:0 auto 25px auto;border-radius:12px;"></div>
+  <!-- SPOTLIGHT FLIP CONTAINER -->
+  <div class="spotlight-container" onclick="flipSpotlight()">
+    <div id="spotlight" class="spotlight-inner">
+      <div class="front" style="background:black;"></div>
+      <div class="back" style="background:black;"></div>
+    </div>
+  </div>
 
   <!-- PACK ROW -->
-  <div style="display:flex;justify-content:center;gap:15px;">
-
-    <div id="c1" class="card" onclick="flipCard(this)"></div>
-    <div id="c2" class="card" onclick="flipCard(this)"></div>
-    <div id="c3" class="card" onclick="flipCard(this)"></div>
-
+  <div style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
+    <div id="c1" class="card" onclick="selectCard(this)"></div>
+    <div id="c2" class="card" onclick="selectCard(this)"></div>
+    <div id="c3" class="card" onclick="selectCard(this)"></div>
   </div>
 
 </div>
 
 <script>
-function openPack() {
-  const colors = ["red","orange","yellow","green","blue","indigo","violet"];
+function openPack(){
+  const colors=["red","orange","yellow","green","blue","indigo","violet"];
+  const cards=["c1","c2","c3"];
+  cards.forEach(id=>{
+    const card=document.getElementById(id);
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    card.dataset.color=color; // store color
+    card.style.backgroundColor=color; // mini cards always face-up
+  });
 
-  const cards = ["c1","c2","c3"];
-  for (let i=0;i<cards.length;i++){
-    let card=document.getElementById(cards[i]);
-    card.dataset.color=colors[Math.floor(Math.random()*colors.length)]; // store front color
-    card.style.backgroundColor="grey"; // start flipped back
-    card.dataset.flipped="false"; // track state
-  }
-
-  document.getElementById("spotlight").style.backgroundColor="black"; // reset spotlight
+  // reset spotlight to black front and back
+  const front=document.querySelector("#spotlight .front");
+  const back=document.querySelector("#spotlight .back");
+  front.style.backgroundColor="black";
+  back.style.backgroundColor="black";
+  document.getElementById("spotlight").classList.remove("flipped");
 }
 
-function flipCard(card){
-  if(card.dataset.flipped==="false"){
-    card.style.backgroundColor=card.dataset.color; // front
-    card.dataset.flipped="true";
-  } else {
-    card.style.backgroundColor="grey"; // back
-    card.dataset.flipped="false";
-  }
+function selectCard(card){
+  const color=card.dataset.color;
+  const back=document.querySelector("#spotlight .back");
+  back.style.backgroundColor=color; // spotlight back will be the selected card
+  document.getElementById("spotlight").classList.remove("flipped"); // reset flip
+}
 
-  // update spotlight with front color only
-  if(card.dataset.flipped==="true"){
-    document.getElementById("spotlight").style.backgroundColor=card.dataset.color;
-  }
+// flip spotlight on click
+function flipSpotlight(){
+  document.getElementById("spotlight").classList.toggle("flipped");
 }
 </script>
 
 <style>
-.card {
-  width:120px;
-  height:168px;
-  background:black;
-  border-radius:8px;
-  cursor:pointer;
-  transition: background 0.3s ease;
-}
-</style>
-
+.spotlight-container {
+  perspective: 1000px;
+  width:250px;
+  height:350px;
+  margin
