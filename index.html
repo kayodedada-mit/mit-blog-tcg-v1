@@ -1,85 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>MIT Blog TCG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      text-align: center;
-      font-family: sans-serif;
-      background: #f5f5f5;
-      padding: 40px;
-    }
+<div style="text-align:center;">
 
-    .spotlight {
-      width: 250px;
-      height: 350px;
-      background: black;
-      margin: 20px auto;
-      border-radius: 12px;
-      transition: background 0.3s ease;
-    }
+  <!-- OPEN PACK BUTTON -->
+  <button onclick="openPack()" style="margin-bottom:25px;padding:10px 20px;font-size:16px;cursor:pointer;">Open Pack</button>
 
-    .row {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
+  <!-- SPOTLIGHT -->
+  <div id="spotlight" style="width:250px;height:350px;background:black;margin:0 auto 25px auto;border-radius:12px;"></div>
 
-    .card {
-      width: 120px;
-      height: 168px;
-      background: black;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
+  <!-- PACK ROW -->
+  <div style="display:flex;justify-content:center;gap:15px;">
 
-    .card:hover {
-      transform: translateY(-5px);
-    }
+    <div id="c1" class="card" onclick="flipCard(this)"></div>
+    <div id="c2" class="card" onclick="flipCard(this)"></div>
+    <div id="c3" class="card" onclick="flipCard(this)"></div>
 
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-
-  <button onclick="openPack()">Open Pack</button>
-
-  <div id="spotlight" class="spotlight"></div>
-
-  <div class="row">
-    <div id="c1" class="card" onclick="selectCard(this)"></div>
-    <div id="c2" class="card" onclick="selectCard(this)"></div>
-    <div id="c3" class="card" onclick="selectCard(this)"></div>
   </div>
 
-  <script>
-    function openPack() {
-      const colors = ["red","orange","yellow","green","blue","indigo","violet"];
+</div>
 
-      document.getElementById("c1").style.backgroundColor =
-        colors[Math.floor(Math.random()*colors.length)];
+<script>
+function openPack() {
+  const colors = ["red","orange","yellow","green","blue","indigo","violet"];
 
-      document.getElementById("c2").style.backgroundColor =
-        colors[Math.floor(Math.random()*colors.length)];
+  const cards = ["c1","c2","c3"];
+  for (let i=0;i<cards.length;i++){
+    let card=document.getElementById(cards[i]);
+    card.dataset.color=colors[Math.floor(Math.random()*colors.length)]; // store front color
+    card.style.backgroundColor="grey"; // start flipped back
+    card.dataset.flipped="false"; // track state
+  }
 
-      document.getElementById("c3").style.backgroundColor =
-        colors[Math.floor(Math.random()*colors.length)];
+  document.getElementById("spotlight").style.backgroundColor="black"; // reset spotlight
+}
 
-      document.getElementById("spotlight").style.backgroundColor = "black";
-    }
+function flipCard(card){
+  if(card.dataset.flipped==="false"){
+    card.style.backgroundColor=card.dataset.color; // front
+    card.dataset.flipped="true";
+  } else {
+    card.style.backgroundColor="grey"; // back
+    card.dataset.flipped="false";
+  }
 
-    function selectCard(card) {
-      document.getElementById("spotlight").style.backgroundColor =
-        card.style.backgroundColor;
-    }
-  </script>
+  // update spotlight with front color only
+  if(card.dataset.flipped==="true"){
+    document.getElementById("spotlight").style.backgroundColor=card.dataset.color;
+  }
+}
+</script>
 
-</body>
-</html>
+<style>
+.card {
+  width:120px;
+  height:168px;
+  background:black;
+  border-radius:8px;
+  cursor:pointer;
+  transition: background 0.3s ease;
+}
+</style>
+
