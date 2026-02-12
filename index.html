@@ -5,16 +5,16 @@
     Open Pack
   </button>
 
-  <!-- SPOTLIGHT FLIP CONTAINER -->
+  <!-- SPOTLIGHT FLIP -->
   <div class="spotlight-container" onclick="flipSpotlight()">
     <div id="spotlight" class="spotlight-inner">
-      <div class="front" style="background:black;"></div>
-      <div class="back" style="background:black;"></div>
+      <div class="front">Spotlight</div>
+      <div class="back">Back</div>
     </div>
   </div>
 
-  <!-- PACK ROW -->
-  <div style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
+  <!-- MINI CARDS ROW -->
+  <div id="miniRow" style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
     <div id="c1" class="card" onclick="selectCard(this)"></div>
     <div id="c2" class="card" onclick="selectCard(this)"></div>
     <div id="c3" class="card" onclick="selectCard(this)"></div>
@@ -23,38 +23,67 @@
 </div>
 
 <script>
+const colors=["red","orange","yellow","green","blue","indigo","violet"];
+let spotlightFlipped=false;
+
+// Open pack: assign colors to mini cards, stagger flip
 function openPack(){
-  const colors=["red","orange","yellow","green","blue","indigo","violet"];
-  const cards=["c1","c2","c3"];
-  cards.forEach(id=>{
+  const mini=["c1","c2","c3"];
+  // Reset spotlight to placeholder
+  const spotlightFront=document.querySelector("#spotlight .front");
+  const spotlightBack=document.querySelector("#spotlight .back");
+  spotlightFront.style.backgroundColor="black";
+  spotlightFront.textContent="Spotlight";
+  spotlightBack.style.backgroundColor="black";
+  spotlightBack.textContent="Back";
+  document.getElementById("spotlight").classList.remove("flipped");
+  spotlightFlipped=false;
+
+  mini.forEach((id,i)=>{
     const card=document.getElementById(id);
     const color=colors[Math.floor(Math.random()*colors.length)];
-    card.dataset.color=color; // store color
-    card.style.backgroundColor=color; // mini cards always face-up
+    card.dataset.frontColor=color;
+    card.dataset.frontText="Front";
+    card.dataset.backColor="grey";
+    card.dataset.backText="Back";
+
+    card.classList.remove("flipped");
+    card.style.backgroundColor="black";
+    card.textContent="";
+
+    // stagger flip animation
+    setTimeout(()=>{
+      card.classList.add("flipped");
+      card.style.backgroundColor=color;
+      card.textContent="Front";
+    }, i*400);
   });
-
-  // reset spotlight to black front and back
-  const front=document.querySelector("#spotlight .front");
-  const back=document.querySelector("#spotlight .back");
-  front.style.backgroundColor="black";
-  back.style.backgroundColor="black";
-  document.getElementById("spotlight").classList.remove("flipped");
 }
 
+// Select a mini card → update spotlight
 function selectCard(card){
-  const color=card.dataset.color;
-  const back=document.querySelector("#spotlight .back");
-  back.style.backgroundColor=color; // spotlight back will be the selected card
-  document.getElementById("spotlight").classList.remove("flipped"); // reset flip
+  const spotlightFront=document.querySelector("#spotlight .front");
+  const spotlightBack=document.querySelector("#spotlight .back");
+
+  spotlightFront.style.backgroundColor=card.dataset.frontColor;
+  spotlightFront.textContent=card.dataset.frontText;
+
+  spotlightBack.style.backgroundColor=card.dataset.backColor;
+  spotlightBack.textContent=card.dataset.backText;
+
+  document.getElementById("spotlight").classList.remove("flipped");
+  spotlightFlipped=false;
 }
 
-// flip spotlight on click
+// Flip spotlight
 function flipSpotlight(){
   document.getElementById("spotlight").classList.toggle("flipped");
+  spotlightFlipped=!spotlightFlipped;
 }
 </script>
 
 <style>
+/* SPOTLIGHT */
 .spotlight-container {
   perspective: 1000px;
   width:250px;
@@ -75,28 +104,40 @@ function flipSpotlight(){
   transform: rotateY(180deg);
 }
 
-.front, .back {
+.spotlight-inner .front,
+.spotlight-inner .back {
   position:absolute;
   width:100%;
   height:100%;
-  backface-visibility: hidden;
   border-radius:12px;
+  backface-visibility: hidden;
+  color:white;
+  font-weight:bold;
+  font-size:20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
-.back {
+.spotlight-inner .back {
   transform: rotateY(180deg);
 }
 
+/* MINI CARDS */
 .card {
   width:120px;
   height:168px;
-  background:black;
   border-radius:8px;
   cursor:pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.4s, background-color 0.4s;
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
-
-.card:hover {
-  transform: translateY(-5px);
+.card.flipped{
+  transform: rotateY(180deg);
 }
-</style>
+<
