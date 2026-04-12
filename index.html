@@ -7,24 +7,24 @@
 body {
   text-align:center;
   font-family:sans-serif;
-  padding:40px;
-  background:#111;
+  padding:20px;
+  background:white; /* CHANGED */
 }
 
 /* BUTTON */
 button {
-  padding:10px 20px;
-  font-size:16px;
+  padding:8px 16px;
+  font-size:14px;
   cursor:pointer;
-  margin-bottom:20px;
+  margin-bottom:15px;
 }
 
 /* SPOTLIGHT */
 .spotlight-container {
   perspective:1000px;
-  width:250px;
-  height:350px;
-  margin:0 auto 20px auto;
+  width:200px;   /* smaller */
+  height:280px;  /* thinner */
+  margin:0 auto 15px auto;
   cursor:pointer;
 }
 
@@ -45,11 +45,10 @@ button {
   position:absolute;
   width:100%;
   height:100%;
-  border-radius:12px;
+  border-radius:10px;
   backface-visibility:hidden;
   background:black;
 
-  /* KEY FIX FOR IMAGE FIT */
   background-size:contain;
   background-repeat:no-repeat;
   background-position:center;
@@ -63,26 +62,30 @@ button {
 .row {
   display:flex;
   justify-content:center;
-  gap:15px;
-  margin-top:15px;
+  gap:10px;
+  margin-top:10px;
 }
 
 .card {
-  width:120px;
-  height:168px;
-  border-radius:8px;
+  width:90px;   /* smaller */
+  height:126px; /* thinner */
+  border-radius:6px;
   background:black;
   cursor:pointer;
-  transition:transform 0.2s;
   background-size:cover;
   background-position:center;
+
+  transform:scaleX(1);
+  opacity:1;
 }
 
-.card:hover {
-  transform:translateY(-5px);
+/* FAKE FLIP ANIMATION */
+.card.revealing {
+  transform:scaleX(0);
+  opacity:0.5;
 }
 
-/* BLOG BUTTON (disabled look) */
+/* BLOG BUTTON */
 #blogLink {
   pointer-events:none;
   opacity:0.5;
@@ -126,7 +129,6 @@ button {
 const TOTAL_CARDS = 19;
 let spotlightFlipped = false;
 
-/* BLOG LINKS */
 const blogLinks = [
 "https://mitadmissions.org/blogs/entry/the-crimzone/",
 "https://mitadmissions.org/blogs/entry/i-made-a-dress-out-of-target-bags/",
@@ -152,7 +154,6 @@ const blogLinks = [
 function openPack(){
   const cards = ["c1","c2","c3","c4","c5","c6"];
 
-  /* RESET SPOTLIGHT */
   const spotlight = document.getElementById("spotlight");
   const front = spotlight.querySelector(".front");
   const back = spotlight.querySelector(".back");
@@ -165,13 +166,11 @@ function openPack(){
   spotlight.classList.remove("flipped");
   spotlightFlipped = false;
 
-  /* RESET BUTTON */
   const link = document.getElementById("blogLink");
   link.href = "#";
   link.style.pointerEvents = "none";
   link.style.opacity = "0.5";
 
-  /* GENERATE CARDS */
   cards.forEach((id,i)=>{
     const el = document.getElementById(id);
 
@@ -187,8 +186,15 @@ function openPack(){
     el.style.backgroundImage = "";
     el.style.backgroundColor = "black";
 
+    // FAKE FLIP
     setTimeout(()=>{
-      el.style.backgroundImage = "url('" + frontPath + "')";
+      el.classList.add("revealing");
+
+      setTimeout(()=>{
+        el.style.backgroundImage = "url('" + frontPath + "')";
+        el.classList.remove("revealing");
+      },150);
+
     }, i * 200);
   });
 }
@@ -206,7 +212,6 @@ function selectCard(card){
   spotlight.classList.remove("flipped");
   spotlightFlipped = false;
 
-  /* ENABLE BLOG BUTTON */
   const link = document.getElementById("blogLink");
   link.href = blogLinks[card.dataset.index];
   link.style.pointerEvents = "auto";
