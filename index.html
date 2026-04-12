@@ -1,86 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      text-align:center;
-      font-family:sans-serif;
-      padding:40px;
-      background:#111;
-    }
+<style>
+body {
+  text-align:center;
+  font-family:sans-serif;
+  padding:40px;
+  background:#111;
+}
 
-    button {
-      margin-bottom:25px;
-      padding:10px 20px;
-      font-size:16px;
-      cursor:pointer;
-    }
+/* BUTTON */
+button {
+  padding:10px 20px;
+  font-size:16px;
+  cursor:pointer;
+  margin-bottom:20px;
+}
 
-    /* SPOTLIGHT */
-    .spotlight-container {
-      perspective: 1000px;
-      width:250px;
-      height:350px;
-      margin:0 auto 25px auto;
-      cursor:pointer;
-    }
+/* SPOTLIGHT */
+.spotlight-container {
+  perspective:1000px;
+  width:250px;
+  height:350px;
+  margin:0 auto 20px auto;
+  cursor:pointer;
+}
 
-    .spotlight-inner {
-      width:100%;
-      height:100%;
-      position:relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-    }
+.spotlight-inner {
+  width:100%;
+  height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform 0.6s;
+}
 
-    .spotlight-inner.flipped {
-      transform: rotateY(180deg);
-    }
+.spotlight-inner.flipped {
+  transform:rotateY(180deg);
+}
 
-    .spotlight-inner .front,
-    .spotlight-inner .back {
-      position:absolute;
-      width:100%;
-      height:100%;
-      border-radius:12px;
-      backface-visibility: hidden;
-      background:black;
-    
-      /* ADD THESE */
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
+.spotlight-inner .front,
+.spotlight-inner .back {
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:12px;
+  backface-visibility:hidden;
+  background:black;
 
-    .spotlight-inner .back {
-      transform: rotateY(180deg);
-    }
+  /* KEY FIX FOR IMAGE FIT */
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+}
 
-    /* MINI CARDS */
-    .row {
-      display:flex;
-      justify-content:center;
-      gap:15px;
-      margin-top:15px;
-    }
+.spotlight-inner .back {
+  transform:rotateY(180deg);
+}
 
-    .card {
-      width:120px;
-      height:168px;
-      border-radius:8px;
-      background:black;
-      cursor:pointer;
-      transition: transform 0.2s;
-      background-size:cover;
-      background-position:center;
-    }
+/* MINI CARDS */
+.row {
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:15px;
+}
 
-    .card:hover {
-      transform: translateY(-5px);
-    }
-  </style>
+.card {
+  width:120px;
+  height:168px;
+  border-radius:8px;
+  background:black;
+  cursor:pointer;
+  transition:transform 0.2s;
+  background-size:cover;
+  background-position:center;
+}
+
+.card:hover {
+  transform:translateY(-5px);
+}
+
+/* BLOG BUTTON (disabled look) */
+#blogLink {
+  pointer-events:none;
+  opacity:0.5;
+  display:inline-block;
+}
+</style>
 </head>
 
 <body>
@@ -94,6 +102,11 @@
     <div class="back"></div>
   </div>
 </div>
+
+<!-- BLOG BUTTON -->
+<a id="blogLink" href="#" target="_blank">
+  <button>Read Blog</button>
+</a>
 
 <!-- ROW 1 -->
 <div class="row">
@@ -113,10 +126,33 @@
 const TOTAL_CARDS = 19;
 let spotlightFlipped = false;
 
+/* BLOG LINKS */
+const blogLinks = [
+"https://mitadmissions.org/blogs/entry/the-crimzone/",
+"https://mitadmissions.org/blogs/entry/i-made-a-dress-out-of-target-bags/",
+"https://mitadmissions.org/blogs/entry/setting-things-on-fire/",
+"https://mitadmissions.org/blogs/entry/hokey-pokey/",
+"https://mitadmissions.org/blogs/entry/king-of-boston-king-of-the-world/",
+"https://mitadmissions.org/blogs/entry/picture-the-world/",
+"https://mitadmissions.org/blogs/entry/summiting-mount-monadnock/",
+"https://mitadmissions.org/blogs/entry/gently-down-the-stream/",
+"https://mitadmissions.org/blogs/entry/the-pnr-mindset-vs-the-grindset-mindset/",
+"https://mitadmissions.org/blogs/entry/halas-escape-from-groundhog-day/",
+"https://mitadmissions.org/blogs/entry/1-fish-2-fish-a-lot-of-fish-and-a-snail/",
+"https://mitadmissions.org/blogs/entry/trail-notes/",
+"https://mitadmissions.org/blogs/entry/i-failed-the-swim-test/",
+"https://mitadmissions.org/blogs/entry/clownazoo-part-2/",
+"https://mitadmissions.org/blogs/entry/everything-i-made-this-year/",
+"https://mitadmissions.org/blogs/entry/snip-snip/",
+"https://mitadmissions.org/blogs/entry/an-infinite-nine-year-old/",
+"https://mitadmissions.org/blogs/entry/we-have-the-winter-olympics-at-home/",
+"https://mitadmissions.org/blogs/entry/the-periodic-table-of-mit/"
+];
+
 function openPack(){
   const cards = ["c1","c2","c3","c4","c5","c6"];
 
-  // Reset spotlight
+  /* RESET SPOTLIGHT */
   const spotlight = document.getElementById("spotlight");
   const front = spotlight.querySelector(".front");
   const back = spotlight.querySelector(".back");
@@ -129,24 +165,28 @@ function openPack(){
   spotlight.classList.remove("flipped");
   spotlightFlipped = false;
 
+  /* RESET BUTTON */
+  const link = document.getElementById("blogLink");
+  link.href = "#";
+  link.style.pointerEvents = "none";
+  link.style.opacity = "0.5";
+
+  /* GENERATE CARDS */
   cards.forEach((id,i)=>{
     const el = document.getElementById(id);
 
-    // random card
     const num = Math.floor(Math.random() * TOTAL_CARDS) + 1;
 
     const frontPath = "Blog-TCG-Fronts/CampusTrade-FRONT-" + num + ".png";
     const backPath  = "Blog-TCG-Backs/CampusTrade-BACK-" + num + ".png";
 
-    // store data
     el.dataset.front = frontPath;
     el.dataset.back  = backPath;
+    el.dataset.index = num - 1;
 
-    // reset
     el.style.backgroundImage = "";
     el.style.backgroundColor = "black";
 
-    // stagger reveal
     setTimeout(()=>{
       el.style.backgroundImage = "url('" + frontPath + "')";
     }, i * 200);
@@ -165,6 +205,12 @@ function selectCard(card){
 
   spotlight.classList.remove("flipped");
   spotlightFlipped = false;
+
+  /* ENABLE BLOG BUTTON */
+  const link = document.getElementById("blogLink");
+  link.href = blogLinks[card.dataset.index];
+  link.style.pointerEvents = "auto";
+  link.style.opacity = "1";
 }
 
 function flipSpotlight(){
