@@ -30,6 +30,78 @@
 </div>
 
 <script>
+let spotlightFlipped=false;
+const TOTAL_CARDS = 19;
+
+function openPack(){
+  const mini=["c1","c2","c3","c4","c5","c6"];
+
+  // Reset spotlight
+  const spotlightFront=document.querySelector("#spotlight .front");
+  const spotlightBack=document.querySelector("#spotlight .back");
+
+  spotlightFront.style.backgroundImage="";
+  spotlightBack.style.backgroundImage="";
+  spotlightFront.style.backgroundColor="black";
+  spotlightBack.style.backgroundColor="black";
+
+  document.getElementById("spotlight").classList.remove("flipped");
+  spotlightFlipped=false;
+
+  mini.forEach((id,i)=>{
+    const card=document.getElementById(id);
+
+    // random card number
+    const num = Math.floor(Math.random() * TOTAL_CARDS) + 1;
+
+    // correct file paths
+    const frontPath = "images/Blog-TCG-Fronts/CampusTrade-FRONT-" + num + ".png";
+    const backPath  = "images/Blog-TCG-Backs/CampusTrade-BACK-" + num + ".png";
+
+    // store
+    card.dataset.front = frontPath;
+    card.dataset.back  = backPath;
+
+    // reset visual
+    card.style.backgroundImage="";
+    card.style.backgroundColor="black";
+
+    // stagger reveal
+    setTimeout(()=>{
+      card.style.backgroundImage = "url('" + frontPath + "')";
+      card.style.backgroundSize = "cover";
+      card.style.backgroundPosition = "center";
+    }, i*200);
+  });
+}
+
+function selectCard(card){
+  const spotlightFront=document.querySelector("#spotlight .front");
+  const spotlightBack=document.querySelector("#spotlight .back");
+
+  // FRONT
+  spotlightFront.style.backgroundImage = "url('" + card.dataset.front + "')";
+  spotlightFront.style.backgroundSize = "cover";
+  spotlightFront.style.backgroundPosition = "center";
+  spotlightFront.style.backgroundColor="transparent";
+  spotlightFront.textContent="";
+
+  // BACK
+  spotlightBack.style.backgroundImage = "url('" + card.dataset.back + "')";
+  spotlightBack.style.backgroundSize = "cover";
+  spotlightBack.style.backgroundPosition = "center";
+  spotlightBack.style.backgroundColor="transparent";
+  spotlightBack.textContent="";
+
+  document.getElementById("spotlight").classList.remove("flipped");
+  spotlightFlipped=false;
+}
+
+function flipSpotlight(){
+  document.getElementById("spotlight").classList.toggle("flipped");
+  spotlightFlipped=!spotlightFlipped;
+}
+</script>
 const colors=["red","orange","yellow","green","blue","indigo","violet"];
 let spotlightFlipped=false;
 
