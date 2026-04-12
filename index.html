@@ -1,217 +1,173 @@
-<div style="text-align:center;">
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- OPEN PACK BUTTON -->
-  <button onclick="openPack()" style="margin-bottom:25px;padding:10px 20px;font-size:16px;cursor:pointer;">
-    Open Pack
-  </button>
+  <style>
+    body {
+      text-align:center;
+      font-family:sans-serif;
+      padding:40px;
+      background:#111;
+    }
 
-  <!-- SPOTLIGHT FLIP -->
-  <div class="spotlight-container" onclick="flipSpotlight()">
-    <div id="spotlight" class="spotlight-inner">
-      <div class="front">Spotlight</div>
-      <div class="back">Back</div>
-    </div>
+    button {
+      margin-bottom:25px;
+      padding:10px 20px;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    /* SPOTLIGHT */
+    .spotlight-container {
+      perspective: 1000px;
+      width:250px;
+      height:350px;
+      margin:0 auto 25px auto;
+      cursor:pointer;
+    }
+
+    .spotlight-inner {
+      width:100%;
+      height:100%;
+      position:relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .spotlight-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .spotlight-inner .front,
+    .spotlight-inner .back {
+      position:absolute;
+      width:100%;
+      height:100%;
+      border-radius:12px;
+      backface-visibility: hidden;
+      background:black;
+    }
+
+    .spotlight-inner .back {
+      transform: rotateY(180deg);
+    }
+
+    /* MINI CARDS */
+    .row {
+      display:flex;
+      justify-content:center;
+      gap:15px;
+      margin-top:15px;
+    }
+
+    .card {
+      width:120px;
+      height:168px;
+      border-radius:8px;
+      background:black;
+      cursor:pointer;
+      transition: transform 0.2s;
+      background-size:cover;
+      background-position:center;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+
+<body>
+
+<button onclick="openPack()">Open Pack</button>
+
+<!-- SPOTLIGHT -->
+<div class="spotlight-container" onclick="flipSpotlight()">
+  <div id="spotlight" class="spotlight-inner">
+    <div class="front"></div>
+    <div class="back"></div>
   </div>
+</div>
 
-  <!-- MINI CARDS ROW 1 -->
-  <div style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
-    <div id="c1" class="card" onclick="selectCard(this)"></div>
-    <div id="c2" class="card" onclick="selectCard(this)"></div>
-    <div id="c3" class="card" onclick="selectCard(this)"></div>
-  </div>
+<!-- ROW 1 -->
+<div class="row">
+  <div id="c1" class="card" onclick="selectCard(this)"></div>
+  <div id="c2" class="card" onclick="selectCard(this)"></div>
+  <div id="c3" class="card" onclick="selectCard(this)"></div>
+</div>
 
-  <!-- MINI CARDS ROW 2 -->
-  <div style="display:flex;justify-content:center;gap:15px;margin-top:15px;">
-    <div id="c4" class="card" onclick="selectCard(this)"></div>
-    <div id="c5" class="card" onclick="selectCard(this)"></div>
-    <div id="c6" class="card" onclick="selectCard(this)"></div>
-  </div>
-
+<!-- ROW 2 -->
+<div class="row">
+  <div id="c4" class="card" onclick="selectCard(this)"></div>
+  <div id="c5" class="card" onclick="selectCard(this)"></div>
+  <div id="c6" class="card" onclick="selectCard(this)"></div>
 </div>
 
 <script>
-let spotlightFlipped=false;
 const TOTAL_CARDS = 19;
+let spotlightFlipped = false;
 
 function openPack(){
-  const mini=["c1","c2","c3","c4","c5","c6"];
+  const cards = ["c1","c2","c3","c4","c5","c6"];
 
   // Reset spotlight
-  const spotlightFront=document.querySelector("#spotlight .front");
-  const spotlightBack=document.querySelector("#spotlight .back");
+  const spotlight = document.getElementById("spotlight");
+  const front = spotlight.querySelector(".front");
+  const back = spotlight.querySelector(".back");
 
-  spotlightFront.style.backgroundImage="";
-  spotlightBack.style.backgroundImage="";
-  spotlightFront.style.backgroundColor="black";
-  spotlightBack.style.backgroundColor="black";
+  front.style.backgroundImage = "";
+  back.style.backgroundImage = "";
+  front.style.backgroundColor = "black";
+  back.style.backgroundColor = "black";
 
-  document.getElementById("spotlight").classList.remove("flipped");
-  spotlightFlipped=false;
+  spotlight.classList.remove("flipped");
+  spotlightFlipped = false;
 
-  mini.forEach((id,i)=>{
-    const card=document.getElementById(id);
+  cards.forEach((id,i)=>{
+    const el = document.getElementById(id);
 
-    // random card number
+    // random card
     const num = Math.floor(Math.random() * TOTAL_CARDS) + 1;
 
-    // correct file paths
-    const frontPath = "images/Blog-TCG-Fronts/CampusTrade-FRONT-" + num + ".png";
-    const backPath  = "images/Blog-TCG-Backs/CampusTrade-BACK-" + num + ".png";
+    const frontPath = "Blog-TCG-Fronts/CampusTrade-FRONT-" + num + ".png";
+    const backPath  = "Blog-TCG-Backs/CampusTrade-BACK-" + num + ".png";
 
-    // store
-    card.dataset.front = frontPath;
-    card.dataset.back  = backPath;
+    // store data
+    el.dataset.front = frontPath;
+    el.dataset.back  = backPath;
 
-    // reset visual
-    card.style.backgroundImage="";
-    card.style.backgroundColor="black";
+    // reset
+    el.style.backgroundImage = "";
+    el.style.backgroundColor = "black";
 
     // stagger reveal
     setTimeout(()=>{
-      card.style.backgroundImage = "url('" + frontPath + "')";
-      card.style.backgroundSize = "cover";
-      card.style.backgroundPosition = "center";
-    }, i*200);
+      el.style.backgroundImage = "url('" + frontPath + "')";
+    }, i * 200);
   });
 }
 
 function selectCard(card){
-  const spotlightFront=document.querySelector("#spotlight .front");
-  const spotlightBack=document.querySelector("#spotlight .back");
+  const spotlight = document.getElementById("spotlight");
+  const front = spotlight.querySelector(".front");
+  const back = spotlight.querySelector(".back");
 
-  // FRONT
-  spotlightFront.style.backgroundImage = "url('" + card.dataset.front + "')";
-  spotlightFront.style.backgroundSize = "cover";
-  spotlightFront.style.backgroundPosition = "center";
-  spotlightFront.style.backgroundColor="transparent";
-  spotlightFront.textContent="";
+  front.style.backgroundImage = "url('" + card.dataset.front + "')";
+  back.style.backgroundImage  = "url('" + card.dataset.back + "')";
+  front.style.backgroundColor = "transparent";
+  back.style.backgroundColor  = "transparent";
 
-  // BACK
-  spotlightBack.style.backgroundImage = "url('" + card.dataset.back + "')";
-  spotlightBack.style.backgroundSize = "cover";
-  spotlightBack.style.backgroundPosition = "center";
-  spotlightBack.style.backgroundColor="transparent";
-  spotlightBack.textContent="";
-
-  document.getElementById("spotlight").classList.remove("flipped");
-  spotlightFlipped=false;
+  spotlight.classList.remove("flipped");
+  spotlightFlipped = false;
 }
 
 function flipSpotlight(){
-  document.getElementById("spotlight").classList.toggle("flipped");
-  spotlightFlipped=!spotlightFlipped;
-}
-</script>
-const colors=["red","orange","yellow","green","blue","indigo","violet"];
-let spotlightFlipped=false;
-
-function openPack(){
-  const mini=["c1","c2","c3","c4","c5","c6"];
-
-  // Reset spotlight
-  const spotlightFront=document.querySelector("#spotlight .front");
-  const spotlightBack=document.querySelector("#spotlight .back");
-  spotlightFront.style.backgroundColor="black";
-  spotlightFront.textContent="Spotlight";
-  spotlightBack.style.backgroundColor="black";
-  spotlightBack.textContent="Back";
-  document.getElementById("spotlight").classList.remove("flipped");
-  spotlightFlipped=false;
-
-  mini.forEach((id,i)=>{
-    const card=document.getElementById(id);
-    const color=colors[Math.floor(Math.random()*colors.length)];
-
-    card.dataset.frontColor=color;
-    card.dataset.frontText="Front";
-    card.dataset.backColor="grey";
-    card.dataset.backText="Back";
-
-    // reset
-    card.style.backgroundColor="black";
-    card.textContent="";
-
-    // staggered reveal (NO rotation)
-    setTimeout(()=>{
-      card.style.backgroundColor=color;
-      card.textContent="Front";
-    }, i*200);
-  });
-}
-
-function selectCard(card){
-  const spotlightFront=document.querySelector("#spotlight .front");
-  const spotlightBack=document.querySelector("#spotlight .back");
-
-  spotlightFront.style.backgroundColor=card.dataset.frontColor;
-  spotlightFront.textContent=card.dataset.frontText;
-
-  spotlightBack.style.backgroundColor=card.dataset.backColor;
-  spotlightBack.textContent=card.dataset.backText;
-
-  document.getElementById("spotlight").classList.remove("flipped");
-  spotlightFlipped=false;
-}
-
-function flipSpotlight(){
-  document.getElementById("spotlight").classList.toggle("flipped");
-  spotlightFlipped=!spotlightFlipped;
+  const spotlight = document.getElementById("spotlight");
+  spotlight.classList.toggle("flipped");
+  spotlightFlipped = !spotlightFlipped;
 }
 </script>
 
-<style>
-/* SPOTLIGHT */
-.spotlight-container {
-  perspective: 1000px;
-  width:250px;
-  height:350px;
-  margin:0 auto 25px auto;
-  cursor:pointer;
-}
-
-.spotlight-inner {
-  width:100%;
-  height:100%;
-  position:relative;
-  transform-style: preserve-3d;
-  transition: transform 0.6s;
-}
-
-.spotlight-inner.flipped {
-  transform: rotateY(180deg);
-}
-
-.spotlight-inner .front,
-.spotlight-inner .back {
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:12px;
-  backface-visibility: hidden;
-  color:white;
-  font-weight:bold;
-  font-size:20px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.spotlight-inner .back {
-  transform: rotateY(180deg);
-}
-
-/* MINI CARDS */
-.card {
-  width:120px;
-  height:168px;
-  border-radius:8px;
-  cursor:pointer;
-  transition: background-color 0.3s;
-  color:white;
-  font-weight:bold;
-  font-size:16px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-</style>
+</body>
+</html>
