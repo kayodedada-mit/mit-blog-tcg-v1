@@ -13,11 +13,18 @@
     </div>
   </div>
 
-  <!-- MINI CARDS ROW -->
-  <div id="miniRow" style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
+  <!-- MINI CARDS ROW 1 -->
+  <div style="display:flex;justify-content:center;gap:15px;margin-top:20px;">
     <div id="c1" class="card" onclick="selectCard(this)"></div>
     <div id="c2" class="card" onclick="selectCard(this)"></div>
     <div id="c3" class="card" onclick="selectCard(this)"></div>
+  </div>
+
+  <!-- MINI CARDS ROW 2 -->
+  <div style="display:flex;justify-content:center;gap:15px;margin-top:15px;">
+    <div id="c4" class="card" onclick="selectCard(this)"></div>
+    <div id="c5" class="card" onclick="selectCard(this)"></div>
+    <div id="c6" class="card" onclick="selectCard(this)"></div>
   </div>
 
 </div>
@@ -26,10 +33,10 @@
 const colors=["red","orange","yellow","green","blue","indigo","violet"];
 let spotlightFlipped=false;
 
-// Open pack: assign colors to mini cards, stagger flip
 function openPack(){
-  const mini=["c1","c2","c3"];
-  // Reset spotlight to placeholder
+  const mini=["c1","c2","c3","c4","c5","c6"];
+
+  // Reset spotlight
   const spotlightFront=document.querySelector("#spotlight .front");
   const spotlightBack=document.querySelector("#spotlight .back");
   spotlightFront.style.backgroundColor="black";
@@ -42,25 +49,24 @@ function openPack(){
   mini.forEach((id,i)=>{
     const card=document.getElementById(id);
     const color=colors[Math.floor(Math.random()*colors.length)];
+
     card.dataset.frontColor=color;
     card.dataset.frontText="Front";
     card.dataset.backColor="grey";
     card.dataset.backText="Back";
 
-    card.classList.remove("flipped");
+    // reset
     card.style.backgroundColor="black";
     card.textContent="";
 
-    // stagger flip animation
+    // staggered reveal (NO rotation)
     setTimeout(()=>{
-      card.classList.add("flipped");
       card.style.backgroundColor=color;
       card.textContent="Front";
-    }, i*400);
+    }, i*200);
   });
 }
 
-// Select a mini card → update spotlight
 function selectCard(card){
   const spotlightFront=document.querySelector("#spotlight .front");
   const spotlightBack=document.querySelector("#spotlight .back");
@@ -75,7 +81,6 @@ function selectCard(card){
   spotlightFlipped=false;
 }
 
-// Flip spotlight
 function flipSpotlight(){
   document.getElementById("spotlight").classList.toggle("flipped");
   spotlightFlipped=!spotlightFlipped;
@@ -129,7 +134,7 @@ function flipSpotlight(){
   height:168px;
   border-radius:8px;
   cursor:pointer;
-  transition: transform 0.4s, background-color 0.4s;
+  transition: background-color 0.3s;
   color:white;
   font-weight:bold;
   font-size:16px;
@@ -137,7 +142,4 @@ function flipSpotlight(){
   justify-content:center;
   align-items:center;
 }
-.card.flipped{
-  transform: rotateY(180deg);
-}
-<
+</style>
